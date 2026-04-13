@@ -48,6 +48,9 @@ function addItem(event) {
                 } else {
                     op = text;
                 }
+            } else {
+                op = text;
+                justUsedEqualSign = 0;
             }
         } else if(type === "toggle") {
             justUsedEqualSign = 0;
@@ -63,6 +66,7 @@ function addItem(event) {
                 left = null;
                 right = null;
                 op = "";
+                justUsedEqualSign = 0;
             }
             left = left === null ? text : left + text;
         } else if(type === "op") {
@@ -101,7 +105,7 @@ function addItem(event) {
                 }
         }
     } else if(type === "punctuation") {
-        justUsedEqualSign = 0;v
+        justUsedEqualSign = 0;
         if(right !== null) {
             right = right.includes(".") ? right : right + ".";
         } else if(op === "") {
