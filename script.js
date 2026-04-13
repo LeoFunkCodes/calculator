@@ -8,23 +8,23 @@ function multiply(a, b) {
     return a * b;
 }
 function divide(a, b) {
-    if(b === 0) { return "NOPE" }
+    if(b === 0) { document.querySelector("body").textContent = "NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE NOPE" }
     return a / b;
 }
 
 function operate(a, b, op) {
-    if(a === "NOPE") { return "STOP" }
-    if(a === "STOP") { return "STOPP!!" }
+    a = Number(a);
+    b = Number(b);
 
     switch(op) {
         case "+":
-            return(add(a, b))
+            return add(a, b);
         case "-":
-            return(subtract(a, b))
+            return subtract(a, b);
         case "*":
-            return(multiply(a, b))
+            return multiply(a, b);
         case "/":
-            return(divide(a, b))
+            return divide(a, b);
     }
 }
 
@@ -33,11 +33,10 @@ function addItem(event) {
     const type = target.classList[0];
     const text = target.textContent;
     if(text.length > 3) {  return;  }
-    console.log(type);
 
     if(op !== "") {
         if(type === "num") {
-            right = right === null ? Number(text) : Number(String(right) + text);
+            right = right === null ? text : right + text;
         } else if(type === "op") {
             if(right !== null) {
                 left = operate(left, right, op)
@@ -57,10 +56,11 @@ function addItem(event) {
         }
     } else {
         if(type === "num") {
-            left = left === null ? Number(text) : Number(String(left) + text);;
+            left = left === null ? text : left + text;
         } else if(type === "op") {
             if(text !== "=") {
                 op = text;
+                right = null;
             }
         } else if(type === "toggle") {
             if(right !== null) {
@@ -89,6 +89,12 @@ function addItem(event) {
                     if(left === 0) { left = null }
                 }
         }
+    } else if(type === "punctuation") {
+        if(right !== null) {
+            right = right.includes(".") ? right : right + ".";
+        } else if(op === "") {
+            left = left.includes(".") ? left : left + ".";
+        }
     }
 
     updateDisplay();
@@ -96,7 +102,7 @@ function addItem(event) {
 
 function format(n) {
     if (n === null) return "";
-    return Number(n).toFixed(3);
+    return Math.round(Number(n) * 1000) / 1000;
 }
 
 function updateDisplay() {
