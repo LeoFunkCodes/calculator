@@ -38,16 +38,19 @@ function addItem(event) {
         if(type === "num") {
             right = right === null ? text : right + text;
         } else if(type === "op") {
+            justUsedEqualSign = 0;
             if(right !== null) {
                 left = operate(left, right, op)
                 right = null;
                 if(text === "=") {
                     op = "";
+                    justUsedEqualSign = 1;
                 } else {
                     op = text;
                 }
             }
         } else if(type === "toggle") {
+            justUsedEqualSign = 0;
             if(right !== null) {
                 right = 0 - right;
             } else {
@@ -56,13 +59,20 @@ function addItem(event) {
         }
     } else {
         if(type === "num") {
+            if(justUsedEqualSign) {
+                left = null;
+                right = null;
+                op = "";
+            }
             left = left === null ? text : left + text;
         } else if(type === "op") {
+            justUsedEqualSign = 0;
             if(text !== "=") {
                 op = text;
                 right = null;
             }
         } else if(type === "toggle") {
+            justUsedEqualSign = 0;
             if(right !== null) {
                 right = 0 - right;
             } else {
@@ -72,6 +82,7 @@ function addItem(event) {
     }
 
     if(type === "ctrl") {
+        justUsedEqualSign = 0;
         switch(text) {
             case "AC":
                 left = null;
@@ -90,6 +101,7 @@ function addItem(event) {
                 }
         }
     } else if(type === "punctuation") {
+        justUsedEqualSign = 0;v
         if(right !== null) {
             right = right.includes(".") ? right : right + ".";
         } else if(op === "") {
@@ -115,5 +127,6 @@ const display = document.querySelector("#text");
 let left = null;
 let right = null;
 let op = "";
+let justUsedEqualSign = 0;
 
 buttons.addEventListener("click", addItem)
